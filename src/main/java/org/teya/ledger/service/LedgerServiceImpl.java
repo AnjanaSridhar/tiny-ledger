@@ -11,8 +11,12 @@ import org.teya.ledger.model.Transaction;
 import org.teya.ledger.model.UpdateLedgerRequest;
 import org.teya.ledger.repository.LedgerRepository;
 
+import static java.time.ZonedDateTime.now;
+import static org.apache.logging.log4j.util.Strings.isEmpty;
 import static org.teya.ledger.model.OperationType.DEPOSIT;
 import static org.teya.ledger.model.OperationType.WITHDRAW;
+import static org.teya.ledger.model.Type.CREDIT;
+import static org.teya.ledger.model.Type.DEBIT;
 
 @Service
 public class LedgerServiceImpl implements LedgerService {
@@ -34,13 +38,16 @@ public class LedgerServiceImpl implements LedgerService {
 
     @Override
     public Balance updateLedger(UUID accountId, UpdateLedgerRequest request, OperationType operation) {
+        String description = request.description();
         BigDecimal balance = ledgerRepository.getBalances(accountId).balance().value();
         if (operation == WITHDRAW) {
             ledgerRepository.updateBalance(accountId, computeBalanceAfterWithdrawal(balance, request.amount()));
-            ledgerRepository.updateTransaction(accountId);
+            if (isEmpty(description)) description = "Withdrawal " + now().getMonth() + now().getDayOfMonth();
+            ledgerRepository.updateTransaction(accountId, DEBIT, request.amount(), description);
         } else if (operation == DEPOSIT) {
             ledgerRepository.updateBalance(accountId, computeBalanceAfterDeposit(balance, request.amount()));
-            ledgerRepository.updateTransaction(accountId);
+            if (isEmpty(description)) description = "Deposit " + now().getMonth() + now().getDayOfMonth();
+            ledgerRepository.updateTransaction(accountId, CREDIT, request.amount(), description);
         }
         return ledgerRepository.getBalances(accountId);
     }
