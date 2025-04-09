@@ -1,10 +1,10 @@
 package org.teya.ledger.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.teya.ledger.model.Account;
+import org.teya.ledger.model.Balance;
 import org.teya.ledger.model.DepositRequest;
 import org.teya.ledger.model.Transaction;
 import org.teya.ledger.repository.LedgerRepository;
@@ -30,8 +30,13 @@ public class LedgerServiceImpl implements LedgerService {
     }
 
     @Override
-    public BigDecimal deposit(UUID accountId, DepositRequest request) {
+    public Balance deposit(UUID accountId, DepositRequest request) {
         ledgerRepository.updateTransaction(accountId, aTransaction().build());
-        return BigDecimal.ZERO;
+        return null;
+    }
+
+    @Override
+    public Balance getBalances(UUID accountId) {
+        return ledgerRepository.getBalances(accountId);
     }
 }
