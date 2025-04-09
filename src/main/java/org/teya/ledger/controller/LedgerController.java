@@ -40,8 +40,8 @@ public class LedgerController {
     }
 
     @GetMapping("/{accountId}/balances")
-    public ResponseEntity<String> balances(@PathVariable("accountId") UUID accountId) {
-        return ResponseEntity.status(501).build();
+    public BalancesResponse balances(@PathVariable("accountId") UUID accountId) {
+        return new BalancesResponse(ledgerService.getBalances(accountId));
     }
 
     @GetMapping("/{accountId}/transactions")
