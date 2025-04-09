@@ -3,6 +3,7 @@ package org.teya.ledger.service;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
+import org.teya.ledger.model.Account;
 import org.teya.ledger.model.Transaction;
 import org.teya.ledger.repository.LedgerRepository;
 
@@ -17,5 +18,10 @@ public class LedgerServiceImpl implements LedgerService {
     @Override
     public List<Transaction> getTransactions(UUID accountId) {
         return ledgerRepository.getTransactions(accountId);
+    }
+
+    @Override
+    public List<Account> getAccounts() {
+        return ledgerRepository.getAccounts();
     }
 }
