@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.teya.ledger.model.AccountsResponse;
 import org.teya.ledger.service.LedgerService;
 import org.teya.ledger.model.TransactionsResponse;
 
@@ -20,8 +21,8 @@ public class LedgerController {
     }
 
     @GetMapping("")
-    public ResponseEntity<String> accounts() {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<AccountsResponse> accounts() {
+        return ResponseEntity.ok(new AccountsResponse(ledgerService.getAccounts()));
     }
 
     @PostMapping("/{accountId}/deposit")
