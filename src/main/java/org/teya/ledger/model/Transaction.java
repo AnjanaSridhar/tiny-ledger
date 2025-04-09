@@ -1,7 +1,7 @@
 package org.teya.ledger.model;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
-public record Transaction(UUID id, UUID accountId, String description, String bookingDateTime, BigDecimal amount) {
+public record Transaction(UUID id, UUID accountId, String description, String bookingDateTime, Amount amount,
+                          Type type) {
 }

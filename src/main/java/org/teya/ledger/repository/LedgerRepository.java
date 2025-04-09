@@ -10,6 +10,7 @@ import org.teya.ledger.model.Account;
 import org.teya.ledger.model.Amount;
 import org.teya.ledger.model.Balance;
 import org.teya.ledger.model.Transaction;
+import org.teya.ledger.model.Type;
 
 import static org.teya.ledger.model.BalanceBuilder.aBalance;
 import static org.teya.ledger.model.TransactionBuilder.aTransaction;
@@ -41,17 +42,20 @@ public class LedgerRepository {
         getAccounts().stream()
                 .peek(account -> {
                     transactionsMap.put(account.id(), List.of(aTransaction().withAccountId(account.id()).build(),
-                            aTransaction().withAccountId(account.id()).withAmount(new BigDecimal("200.00")).build(),
-                            aTransaction().withAccountId(account.id()).withAmount(new BigDecimal("300.00")).build()));
+                            aTransaction().withAccountId(account.id()).withAmount(new Amount("GBP", new BigDecimal("200.00"))).build(),
+                            aTransaction().withAccountId(account.id()).withAmount(new Amount("GBP", new BigDecimal("300.00"))).build()));
                     balancesMap.put(account.id(), aBalance().withAccountId(account.id()).build());
                 }).toList();
 
     }
 
-    public void updateTransaction(UUID accountId) {
+    public void updateTransaction(UUID accountId, Type type, BigDecimal amount, String description) {
         List<Transaction> transactions = new ArrayList<>(transactionsMap.get(accountId));
         transactions.add(aTransaction()
-                .withAccountId(accountId).build());
+                .withAccountId(accountId)
+                .withType(type)
+                .withAmount(new Amount("GBP", amount))
+                .withDescription(description).build());
         transactionsMap.put(accountId, transactions);
     }
 

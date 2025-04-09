@@ -8,9 +8,10 @@ import static java.time.ZonedDateTime.now;
 public final class TransactionBuilder {
     private UUID id = UUID.randomUUID();
     private UUID accountId;
-    private String description = "description";
+    private String description = "REF " + now().getMonth().name() + now().getDayOfMonth() + now().withFixedOffsetZone() + " Transfer";
+    private Amount amount =  new Amount("GBP", new BigDecimal("100.00"));
     private String bookingDateTime = now().withFixedOffsetZone().toString();
-    private BigDecimal amount = BigDecimal.TEN;
+    private Type type = Type.CREDIT;
 
     private TransactionBuilder() {
     }
@@ -24,6 +25,11 @@ public final class TransactionBuilder {
         return this;
     }
 
+    public TransactionBuilder withType(Type type) {
+        this.type = type;
+        return this;
+    }
+
     public TransactionBuilder withAccountId(UUID accountId) {
         this.accountId = accountId;
         return this;
@@ -34,17 +40,17 @@ public final class TransactionBuilder {
         return this;
     }
 
+    public TransactionBuilder withAmount(Amount amount) {
+        this.amount = amount;
+        return this;
+    }
+
     public TransactionBuilder withBookingDateTime(String bookingDateTime) {
         this.bookingDateTime = bookingDateTime;
         return this;
     }
 
-    public TransactionBuilder withAmount(BigDecimal amount) {
-        this.amount = amount;
-        return this;
-    }
-
     public Transaction build() {
-        return new Transaction(id, accountId, description, bookingDateTime, amount);
+        return new Transaction(id, accountId, description, bookingDateTime, amount, type);
     }
 }
