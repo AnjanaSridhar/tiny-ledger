@@ -5,9 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.teya.ledger.model.AccountsResponse;
+import org.teya.ledger.model.BalancesResponse;
+import org.teya.ledger.model.DepositRequest;
 import org.teya.ledger.service.LedgerService;
 import org.teya.ledger.model.TransactionsResponse;
 
@@ -26,8 +29,9 @@ public class LedgerController {
     }
 
     @PostMapping("/{accountId}/deposit")
-    public ResponseEntity<String> deposit(@PathVariable("accountId") UUID accountId) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<BalancesResponse> deposit(@PathVariable("accountId") UUID accountId,
+                                                    @RequestBody DepositRequest request) {
+        return ResponseEntity.ok(new BalancesResponse(ledgerService.deposit(accountId, request)));
     }
 
     @PostMapping("/{accountId}/withdraw")

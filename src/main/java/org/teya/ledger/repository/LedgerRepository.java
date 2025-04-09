@@ -1,5 +1,6 @@
 package org.teya.ledger.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -35,5 +36,11 @@ public class LedgerRepository {
                 .peek(account -> transactionsMap.put(account.id(), List.of(aTransaction().withAccountId(account.id()).build(),
                         aTransaction().withAccountId(account.id()).build(),
                         aTransaction().withAccountId(account.id()).build()))).toList();
+    }
+
+    public void updateTransaction(UUID accountId, Transaction transaction) {
+        List<Transaction> transactions = new ArrayList<>(transactionsMap.get(accountId));
+        transactions.add(transaction);
+        transactionsMap.put(accountId, transactions);
     }
 }
