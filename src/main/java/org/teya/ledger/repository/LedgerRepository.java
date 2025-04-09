@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Repository;
 import org.teya.ledger.model.Account;
+import org.teya.ledger.model.Amount;
 import org.teya.ledger.model.Balance;
 import org.teya.ledger.model.Transaction;
 
@@ -51,6 +52,12 @@ public class LedgerRepository {
         List<Transaction> transactions = new ArrayList<>(transactionsMap.get(accountId));
         transactions.add(transaction);
         transactionsMap.put(accountId, transactions);
+    }
+
+    public void updateBalance(UUID accountId, BigDecimal balance) {
+        balancesMap.put(accountId, aBalance()
+                .withAccountId(accountId)
+                .withBalance(new Amount("GBP", balance)).build());
     }
 
     public Balance getBalances(UUID accountId) {
