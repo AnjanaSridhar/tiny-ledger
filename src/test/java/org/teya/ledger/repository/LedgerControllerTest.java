@@ -65,7 +65,7 @@ public class LedgerControllerTest {
         ResponseEntity<BalancesResponse> response = testRestTemplate.exchange("http://localhost:8080/v1/ledger/accounts/" + ACCOUNT_ID + "/deposit", HttpMethod.POST, requestBody, BalancesResponse.class);
         BalancesResponse balancesResponse = response.getBody();
         assertEquals(200, response.getStatusCode().value());
-        //assertNotNull(balancesResponse.balance());
+        assertNotNull(balancesResponse.balance());
         //check if transaction was added
         ResponseEntity<TransactionsResponse> transactionResponse = testRestTemplate.exchange("http://localhost:8080/v1/ledger/accounts/" + ACCOUNT_ID + "/transactions", HttpMethod.GET, null, TransactionsResponse.class);
         TransactionsResponse transactionsResponse = transactionResponse.getBody();

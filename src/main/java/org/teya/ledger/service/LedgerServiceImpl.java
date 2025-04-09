@@ -32,7 +32,8 @@ public class LedgerServiceImpl implements LedgerService {
     @Override
     public Balance deposit(UUID accountId, DepositRequest request) {
         ledgerRepository.updateTransaction(accountId, aTransaction().build());
-        return null;
+        ledgerRepository.updateBalance(accountId, request.amount());
+        return getBalances(accountId);
     }
 
     @Override

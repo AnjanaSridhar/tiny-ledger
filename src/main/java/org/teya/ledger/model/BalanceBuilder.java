@@ -7,7 +7,7 @@ public final class BalanceBuilder {
     private UUID id = UUID.randomUUID();
     private UUID accountId;
     private String type = "CLOSINGBOOKED";
-    private BigDecimal balance = new BigDecimal("600.00");
+    private Amount balance = new Amount("GBP", new BigDecimal("600.00"));
 
     private BalanceBuilder() {
     }
@@ -28,6 +28,11 @@ public final class BalanceBuilder {
 
     public BalanceBuilder withType(String type) {
         this.type = type;
+        return this;
+    }
+
+    public BalanceBuilder withBalance(Amount balance) {
+        this.balance = balance;
         return this;
     }
 
