@@ -1,5 +1,6 @@
 package org.teya.ledger.model;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static java.time.ZonedDateTime.now;
@@ -9,6 +10,7 @@ public final class TransactionBuilder {
     private UUID accountId;
     private String description = "description";
     private String bookingDateTime = now().withFixedOffsetZone().toString();
+    private BigDecimal amount = BigDecimal.TEN;
 
     private TransactionBuilder() {
     }
@@ -37,7 +39,12 @@ public final class TransactionBuilder {
         return this;
     }
 
+    public TransactionBuilder withAmount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
+
     public Transaction build() {
-        return new Transaction(id, accountId, description, bookingDateTime);
+        return new Transaction(id, accountId, description, bookingDateTime, amount);
     }
 }
