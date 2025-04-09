@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.teya.ledger.model.AccountsResponse;
 import org.teya.ledger.model.BalancesResponse;
-import org.teya.ledger.model.DepositRequest;
+import org.teya.ledger.model.UpdateLedgerRequest;
 import org.teya.ledger.service.LedgerService;
 import org.teya.ledger.model.TransactionsResponse;
+
+import static org.teya.ledger.model.OperationType.DEPOSIT;
+import static org.teya.ledger.model.OperationType.WITHDRAW;
 
 @RestController
 @RequestMapping("/v1/ledger/accounts")
@@ -30,13 +33,14 @@ public class LedgerController {
 
     @PostMapping("/{accountId}/deposit")
     public ResponseEntity<BalancesResponse> deposit(@PathVariable("accountId") UUID accountId,
-                                                    @RequestBody DepositRequest request) {
-        return ResponseEntity.ok(new BalancesResponse(ledgerService.deposit(accountId, request)));
+                                                    @RequestBody UpdateLedgerRequest request) {
+        return ResponseEntity.ok(new BalancesResponse(ledgerService.updateLedger(accountId, request, DEPOSIT)));
     }
 
     @PostMapping("/{accountId}/withdraw")
-    public ResponseEntity<String> withdraw(@PathVariable("accountId") UUID accountId) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<BalancesResponse> withdraw(@PathVariable("accountId") UUID accountId,
+                                                     @RequestBody UpdateLedgerRequest request) {
+        return ResponseEntity.ok(new BalancesResponse(ledgerService.updateLedger(accountId, request, WITHDRAW)));
     }
 
     @GetMapping("/{accountId}/balances")

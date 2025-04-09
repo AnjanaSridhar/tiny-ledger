@@ -48,9 +48,10 @@ public class LedgerRepository {
 
     }
 
-    public void updateTransaction(UUID accountId, Transaction transaction) {
+    public void updateTransaction(UUID accountId) {
         List<Transaction> transactions = new ArrayList<>(transactionsMap.get(accountId));
-        transactions.add(transaction);
+        transactions.add(aTransaction()
+                .withAccountId(accountId).build());
         transactionsMap.put(accountId, transactions);
     }
 

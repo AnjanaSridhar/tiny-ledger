@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.teya.ledger.model.AccountsResponse;
 import org.teya.ledger.model.BalancesResponse;
-import org.teya.ledger.model.DepositRequest;
+import org.teya.ledger.model.UpdateLedgerRequest;
 import org.teya.ledger.model.Transaction;
 import org.teya.ledger.model.TransactionsResponse;
 
@@ -61,7 +61,7 @@ public class LedgerControllerTest {
         ResponseEntity<BalancesResponse> currentBalanceResponse = testRestTemplate.exchange("http://localhost:8080/v1/ledger/accounts/" + ACCOUNT_ID + "/balances", HttpMethod.GET, null, BalancesResponse.class);
         //When a deposit of 20 GBP is made
         BigDecimal input = new BigDecimal(20);
-        HttpEntity<DepositRequest> requestBody = new HttpEntity<>(new DepositRequest(input));
+        HttpEntity<UpdateLedgerRequest> requestBody = new HttpEntity<>(new UpdateLedgerRequest(input));
         ResponseEntity<BalancesResponse> response = testRestTemplate.exchange("http://localhost:8080/v1/ledger/accounts/" + ACCOUNT_ID + "/deposit", HttpMethod.POST, requestBody, BalancesResponse.class);
         BalancesResponse balancesResponse = response.getBody();
         assertEquals(200, response.getStatusCode().value());
