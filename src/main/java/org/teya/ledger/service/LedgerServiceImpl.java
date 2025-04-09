@@ -1,6 +1,8 @@
 package org.teya.ledger.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,9 @@ public class LedgerServiceImpl implements LedgerService {
 
     @Override
     public List<Transaction> getTransactions(UUID accountId) {
-        return ledgerRepository.getTransactions(accountId);
+        List<Transaction> transactions = new ArrayList<>(ledgerRepository.getTransactions(accountId));
+        transactions.sort(Comparator.comparing(transaction -> ((Transaction)transaction).bookingDateTime()).reversed());
+        return transactions;
     }
 
     @Override
