@@ -3,11 +3,13 @@ package org.teya.ledger.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.stereotype.Repository;
 import org.teya.ledger.model.Account;
 import org.teya.ledger.model.Transaction;
 
 import static org.teya.ledger.model.TransactionBuilder.aTransaction;
 
+@Repository
 public class LedgerRepository {
     private final HashMap<UUID, List<Transaction>> transactionsMap;
 
