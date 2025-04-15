@@ -20,12 +20,12 @@ import static org.teya.ledger.model.Type.CREDIT;
 public class LedgerRepository {
     private final HashMap<UUID, List<Transaction>> transactionsMap;
     private final HashMap<UUID, Balance> balancesMap;
-    private final HashMap<UUID, List<Transaction>> operationsMap;
+    private final HashMap<UUID, List<Transaction>> nonCommittedTransactions;
 
     public LedgerRepository() {
         this.transactionsMap = new HashMap<>();
         this.balancesMap = new HashMap<>();
-        this.operationsMap = new HashMap<>();
+        this.nonCommittedTransactions = new HashMap<>();
         loadMockData();
     }
 
@@ -77,19 +77,19 @@ public class LedgerRepository {
     }
 
     public void setInPlayOperations(UUID accountId, Transaction transaction) {
-        if(operationsMap.get(accountId) != null && !operationsMap.get(accountId).isEmpty()) {
-            List<Transaction> inPlayTransactions = new ArrayList<>(operationsMap.get(accountId));
+        if(nonCommittedTransactions.get(accountId) != null && !nonCommittedTransactions.get(accountId).isEmpty()) {
+            List<Transaction> inPlayTransactions = new ArrayList<>(nonCommittedTransactions.get(accountId));
             inPlayTransactions.add(transaction);
-            operationsMap.put(accountId, inPlayTransactions);
+            nonCommittedTransactions.put(accountId, inPlayTransactions);
         }
         else{
-            operationsMap.put(accountId, List.of(transaction));
+            nonCommittedTransactions.put(accountId, List.of(transaction));
         }
     }
 
     public void commitOperation(UUID accountId) {
-        if(!operationsMap.get(accountId).isEmpty()) {
-            List<Transaction> transactions = operationsMap.get(accountId);
+        if(!nonCommittedTransactions.get(accountId).isEmpty()) {
+            List<Transaction> transactions = nonCommittedTransactions.get(accountId);
             List<Transaction> inPlayTransactions = new ArrayList<>(transactionsMap.get(accountId));
             inPlayTransactions.addAll(transactions);
             updateTransaction(accountId, inPlayTransactions);
