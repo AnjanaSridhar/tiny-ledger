@@ -56,9 +56,21 @@ public class LedgerServiceImpl implements LedgerService {
         return ledgerRepository.getBalances(accountId);
     }
 
+
+
     @Override
     public Balance getBalances(UUID accountId) {
         return ledgerRepository.getBalances(accountId);
+    }
+
+    @Override
+    public void beginTransaction(UUID operationId, Transaction transaction) {
+        ledgerRepository.setInPlayOperations(operationId, transaction);
+    }
+
+    @Override
+    public void commitTransaction(String status, UUID operationId) {
+        ledgerRepository.commitOperation(operationId);
     }
 
     private static BigDecimal computeBalanceAfterDeposit(BigDecimal currentBalance, BigDecimal amount) {

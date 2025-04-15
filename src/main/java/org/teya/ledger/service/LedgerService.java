@@ -16,4 +16,8 @@ public interface LedgerService {
     Balance updateLedger(UUID accountId, UpdateLedgerRequest request, OperationType withdraw);
 
     Balance getBalances(UUID accountId);
+
+    void beginTransaction(UUID operationId, Transaction transaction);
+
+    void commitTransaction(String status, UUID operationId);
 }
