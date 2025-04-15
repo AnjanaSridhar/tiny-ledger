@@ -52,16 +52,6 @@ public class LedgerRepository {
 
     }
 
-    public void updateTransaction(UUID accountId, Type type, BigDecimal amount, String description) {
-        List<Transaction> transactions = new ArrayList<>(transactionsMap.get(accountId));
-        transactions.add(aTransaction()
-                .withAccountId(accountId)
-                .withType(type)
-                .withAmount(new Amount("GBP", amount))
-                .withDescription(description).build());
-        transactionsMap.put(accountId, transactions);
-    }
-
     public void updateTransaction(UUID accountId, List<Transaction> transactions) {
         transactionsMap.put(accountId, transactions);
     }
@@ -76,7 +66,12 @@ public class LedgerRepository {
         return balancesMap.get(accountId);
     }
 
-    public void setInPlayOperations(UUID accountId, Transaction transaction) {
+    public void setInPlayOperations(UUID accountId, Type type, BigDecimal amount, String description) {
+        Transaction transaction = aTransaction()
+                .withAccountId(accountId)
+                .withType(type)
+                .withAmount(new Amount("GBP", amount))
+                .withDescription(description).build();
         if(nonCommittedTransactions.get(accountId) != null && !nonCommittedTransactions.get(accountId).isEmpty()) {
             List<Transaction> inPlayTransactions = new ArrayList<>(nonCommittedTransactions.get(accountId));
             inPlayTransactions.add(transaction);

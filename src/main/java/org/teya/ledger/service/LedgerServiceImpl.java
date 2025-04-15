@@ -1,6 +1,5 @@
 package org.teya.ledger.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -43,20 +42,16 @@ public class LedgerServiceImpl implements LedgerService {
     @Override
     public Balance updateLedger(UUID accountId, UpdateLedgerRequest request, OperationType operation) {
         String description = request.description();
-        BigDecimal balance = ledgerRepository.getBalances(accountId).balance().value();
         if (operation == WITHDRAW) {
-            ledgerRepository.updateBalance(accountId, computeBalanceAfterWithdrawal(balance, request.amount()));
             if (isEmpty(description)) description = "Withdrawal " + now().getMonth() + now().getDayOfMonth();
-            ledgerRepository.updateTransaction(accountId, DEBIT, request.amount(), description);
+            ledgerRepository.setInPlayOperations(accountId, DEBIT, request.amount(), description);
         } else if (operation == DEPOSIT) {
-            ledgerRepository.updateBalance(accountId, computeBalanceAfterDeposit(balance, request.amount()));
             if (isEmpty(description)) description = "Deposit " + now().getMonth() + now().getDayOfMonth();
-            ledgerRepository.updateTransaction(accountId, CREDIT, request.amount(), description);
+            ledgerRepository.setInPlayOperations(accountId, CREDIT, request.amount(), description);
         }
+        ledgerRepository.commitOperation(accountId);
         return ledgerRepository.getBalances(accountId);
     }
-
-
 
     @Override
     public Balance getBalances(UUID accountId) {
@@ -65,19 +60,11 @@ public class LedgerServiceImpl implements LedgerService {
 
     @Override
     public void beginTransaction(UUID operationId, Transaction transaction) {
-        ledgerRepository.setInPlayOperations(operationId, transaction);
+        ledgerRepository.setInPlayOperations(operationId, transaction.type(), transaction.amount().value(), transaction.description());
     }
 
     @Override
     public void commitTransaction(String status, UUID operationId) {
         ledgerRepository.commitOperation(operationId);
-    }
-
-    private static BigDecimal computeBalanceAfterDeposit(BigDecimal currentBalance, BigDecimal amount) {
-        return currentBalance.add(amount);
-    }
-
-    private static BigDecimal computeBalanceAfterWithdrawal(BigDecimal currentBalance, BigDecimal amount) {
-        return currentBalance.subtract(amount);
     }
 }
